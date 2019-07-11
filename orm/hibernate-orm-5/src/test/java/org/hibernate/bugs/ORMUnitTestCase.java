@@ -19,8 +19,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.testing.bytecode.enhancement.BytecodeEnhancerRunner;
 import org.hibernate.testing.junit4.BaseCoreFunctionalTestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * This template demonstrates how to develop a test case for Hibernate ORM, using its built-in unit test framework.
@@ -31,14 +33,18 @@ import org.junit.Test;
  * What's even better?  Fork hibernate-orm itself, add your test case directly to a module's unit tests, then
  * submit it as a PR!
  */
+@RunWith(BytecodeEnhancerRunner.class)
 public class ORMUnitTestCase extends BaseCoreFunctionalTestCase {
 
 	// Add your entities here.
 	@Override
 	protected Class[] getAnnotatedClasses() {
 		return new Class[] {
-//				Foo.class,
-//				Bar.class
+				A.class,
+				B.class,
+				C.class,
+				D.class
+				
 		};
 	}
 
@@ -72,7 +78,26 @@ public class ORMUnitTestCase extends BaseCoreFunctionalTestCase {
 		// BaseCoreFunctionalTestCase automatically creates the SessionFactory and provides the Session.
 		Session s = openSession();
 		Transaction tx = s.beginTransaction();
-		// Do stuff...
+		A a = new A();
+		a.setId(1);
+		s.persist(a);
+		B b = new B();
+		b.setId(1);
+		s.persist(b);	
+
+		C c = new C();
+		c.setId(1);
+		s.persist(c);
+
+		D d = new D();
+		d.setId(1);
+		s.persist(d);
+		s.flush();
+		s.clear();
+		
+		a = s.find(A.class, 1);
+		a.getB();
+		
 		tx.commit();
 		s.close();
 	}
